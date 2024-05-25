@@ -2,14 +2,24 @@
 
 <%= link_to 'Back to lists', lists_path %>
 
-<h2>Bookmarks</h2>
-<%= link_to 'Add Bookmark', new_list_bookmark_path(@list) %>
-
 <ul>
   <% @list.bookmarks.each do |bookmark| %>
     <li>
       <%= bookmark.movie.title %> - <%= bookmark.comment %>
-      <%= link_to 'Delete', bookmark_path(bookmark), data: {turbo_method: :delete, turbo_confirm: "Are you sure?"} %>
+      <%= link_to 'Delete', bookmark_path(bookmark), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' } %>
     </li>
   <% end %>
 </ul>
+
+<h2>Add a New Bookmark</h2>
+<%= simple_form_for([@list, Bookmark.new]) do |form| %>
+  <div>
+    <%= form.input :movie_id, collection: Movie.all, as: :select, label_method: :title, value_method: :id, include_blank: "Select a movie" %>
+  </div>
+  <div>
+    <%= form.input :comment %>
+  </div>
+  <div>
+    <%= form.button :submit, 'Create Bookmark' %>
+  </div>
+<% end %>
